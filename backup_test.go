@@ -239,7 +239,7 @@ func Test_Backup(t *testing.T) {
 				"DLMessageStatusResponse",
 				0,
 				"___EmptyParameterString___",
-				[]interface{}{},
+				map[string]interface{}{},
 			})
 		case "DLMessageGetFreeDiskSpace":
 			backupSrv.SendPacket([]interface{}{
@@ -253,7 +253,7 @@ func Test_Backup(t *testing.T) {
 				"DLMessageStatusResponse",
 				-1,
 				"Operation not supported",
-				[]interface{}{},
+				map[string]interface{}{},
 			})
 		case "DLMessageCreateDirectory":
 			backupSrv.SendPacket([]interface{}{
@@ -267,7 +267,7 @@ func Test_Backup(t *testing.T) {
 				"DLMessageStatusResponse",
 				0,
 				"___EmptyParameterString___",
-				[]interface{}{},
+				map[string]interface{}{},
 			})
 		case "DLMessageMoveFiles", "DLMessageMoveItems", "DLMessageRemoveFiles", "DLMessageRemoveItems":
 			progress = resp[3].(float64)
@@ -275,7 +275,7 @@ func Test_Backup(t *testing.T) {
 				"DLMessageStatusResponse",
 				0,
 				"___EmptyParameterString___",
-				[]interface{}{},
+				map[string]interface{}{},
 			})
 		case "DLMessageDisconnect":
 		case "DLMessageProcessMessage":
@@ -289,7 +289,7 @@ func Test_Backup(t *testing.T) {
 			}
 		}
 
-		fmt.Printf("%.2f\r", progress)
+		fmt.Printf("%.2f %%\r", progress)
 		if progress >= 100.00 {
 			break
 		}
