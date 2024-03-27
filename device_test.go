@@ -23,6 +23,7 @@ func setupDevice(t *testing.T) {
 
 	dev = devices[0]
 }
+
 func Test_device_ReadPairRecord(t *testing.T) {
 	setupDevice(t)
 

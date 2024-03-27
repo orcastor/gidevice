@@ -37,6 +37,7 @@ type device struct {
 	lockdown          *lockdown
 	imageMounter      ImageMounter
 	screenshot        Screenshot
+	backup            Backup
 	simulateLocation  SimulateLocation
 	installationProxy InstallationProxy
 	instruments       Instruments
@@ -252,11 +253,60 @@ func (d *device) screenshotService() (screenshot Screenshot, err error) {
 	return
 }
 
+func (d *device) backupService() (backup Backup, err error) {
+	if d.backup != nil {
+		return d.backup, nil
+	}
+
+	if _, err = d.lockdownService(); err != nil {
+		return nil, err
+	}
+	if d.backup, err = d.lockdown.BackupService(); err != nil {
+		return nil, err
+	}
+	backup = d.backup
+	return
+}
+
 func (d *device) Screenshot() (raw *bytes.Buffer, err error) {
 	if _, err = d.screenshotService(); err != nil {
 		return nil, err
 	}
 	return d.screenshot.Take()
+}
+
+func (d *device) StartBackup(tid, sid string, options map[string]interface{}) (err error) {
+	if _, err = d.backupService(); err != nil {
+		return err
+	}
+	return d.backup.StartBackup(tid, sid, options)
+}
+func (d *device) SendPacket(req []interface{}) (err error) {
+	if _, err = d.backupService(); err != nil {
+		return err
+	}
+	return d.backup.SendPacket(req)
+}
+
+func (d *device) ReceivePacket() (resp []interface{}, err error) {
+	if _, err = d.backupService(); err != nil {
+		return nil, err
+	}
+	return d.backup.ReceivePacket()
+}
+
+func (d *device) SendRaw(raw []byte) (err error) {
+	if _, err = d.backupService(); err != nil {
+		return err
+	}
+	return d.backup.SendRaw(raw)
+}
+
+func (d *device) ReadRaw(length int) (bufLen []byte, err error) {
+	if _, err = d.backupService(); err != nil {
+		return nil, err
+	}
+	return d.backup.ReadRaw(length)
 }
 
 func (d *device) simulateLocationService() (simulateLocation SimulateLocation, err error) {

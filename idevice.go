@@ -37,6 +37,13 @@ type Device interface {
 	screenshotService() (lockdown Screenshot, err error)
 	Screenshot() (raw *bytes.Buffer, err error)
 
+	backupService() (lockdown Backup, err error)
+	StartBackup(tid, sid string, options map[string]interface{}) (err error)
+	SendPacket(req []interface{}) (err error)
+	ReceivePacket() (resp []interface{}, err error)
+	SendRaw(raw []byte) (err error)
+	ReadRaw(length int) (buf []byte, err error)
+
 	simulateLocationService() (simulateLocation SimulateLocation, err error)
 	SimulateLocationUpdate(longitude float64, latitude float64, coordinateSystem ...CoordinateSystem) (err error)
 	SimulateLocationRecover() (err error)
@@ -98,6 +105,7 @@ type Lockdown interface {
 
 	ImageMounterService() (imageMounter ImageMounter, err error)
 	ScreenshotService() (screenshot Screenshot, err error)
+	BackupService() (backup Backup, err error)
 	SimulateLocationService() (simulateLocation SimulateLocation, err error)
 	InstallationProxyService() (installationProxy InstallationProxy, err error)
 	InstrumentsService() (instruments Instruments, err error)
@@ -121,6 +129,15 @@ type ImageMounter interface {
 type Screenshot interface {
 	exchange() (err error)
 	Take() (raw *bytes.Buffer, err error)
+}
+
+type Backup interface {
+	exchange() (err error)
+	StartBackup(tid, sid string, options map[string]interface{}) (err error)
+	SendPacket(req []interface{}) (err error)
+	ReceivePacket() (resp []interface{}, err error)
+	SendRaw(raw []byte) (err error)
+	ReadRaw(length int) (buf []byte, err error)
 }
 
 type SimulateLocation interface {

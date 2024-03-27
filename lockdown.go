@@ -350,6 +350,16 @@ func (c *lockdown) ScreenshotService() (screenshot Screenshot, err error) {
 	return
 }
 
+func (c *lockdown) BackupService() (backup Backup, err error) {
+	var innerConn InnerConn
+	if innerConn, err = c._startService(libimobiledevice.BackupServiceName, nil); err != nil {
+		return nil, err
+	}
+	backupClient := libimobiledevice.NewBackupClient(innerConn)
+	backup = newBackup(backupClient)
+	return
+}
+
 func (c *lockdown) SimulateLocationService() (simulateLocation SimulateLocation, err error) {
 	var innerConn InnerConn
 	if innerConn, err = c._startService(libimobiledevice.SimulateLocationServiceName, nil); err != nil {
