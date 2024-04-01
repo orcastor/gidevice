@@ -19,8 +19,6 @@ func setupBackupSrv(t *testing.T) {
 	if backupSrv, err = lockdownSrv.BackupService(); err != nil {
 		t.Fatal(err)
 	}
-
-	SetDebug(true)
 }
 
 func recvFileName() string {
@@ -58,7 +56,7 @@ const BLOCK_SIZE = 4194304
 func Test_Backup(t *testing.T) {
 	setupBackupSrv(t)
 
-	err := backupSrv.StartBackup(dev.Properties().UDID, dev.Properties().UDID, map[string]interface{}{
+	err := backupSrv.StartBackup(dev.Properties().SerialNumber, "", map[string]interface{}{
 		"ForceFullBackup": true,
 	})
 	if err != nil {
@@ -84,6 +82,7 @@ func Test_Backup(t *testing.T) {
 			errs := map[string]interface{}{}
 
 			for _, path := range resp[1].([]interface{}) {
+				fmt.Println(resp[0].(string), path)
 				// path
 				binary.BigEndian.PutUint32(raw[:], uint32(len(path.(string))))
 				_ = backupSrv.SendRaw(raw[:])
@@ -285,7 +284,7 @@ func Test_Backup(t *testing.T) {
 			}
 
 			if checkErr["ErrorCode"].(uint64) != 0 {
-				fmt.Printf("received an error(%d): %s\n", checkErr["ErrorCode"].(uint64), checkErr["ErrorDescription"].(string))
+				t.Fatal(fmt.Errorf("received an error(%d): %s\n", checkErr["ErrorCode"].(uint64), checkErr["ErrorDescription"].(string)))
 			}
 		}
 

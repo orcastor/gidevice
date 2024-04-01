@@ -52,12 +52,9 @@ func (c *BackupClient) ReceivePacket() (respPkt Packet, err error) {
 }
 
 func (c *BackupClient) SendRaw(raw []byte) (err error) {
-	debugLog(fmt.Sprintf("%s -->\n", raw))
 	return c.client.innerConn.Write(raw)
 }
 
 func (c *BackupClient) ReadRaw(length int) (buf []byte, err error) {
-	buf, err = c.client.innerConn.Read(length)
-	debugLog(fmt.Sprintf("<-- %s\n", buf))
-	return
+	return c.client.innerConn.Read(length)
 }
