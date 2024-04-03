@@ -80,9 +80,10 @@ func Test_Backup(t *testing.T) {
 			errString := "No such file or directory"
 
 			errs := map[string]interface{}{}
+			fmt.Println(resp[0].(string))
 
 			for _, path := range resp[1].([]interface{}) {
-				fmt.Println(resp[0].(string), path)
+				fmt.Println(path)
 				// path
 				binary.BigEndian.PutUint32(raw[:], uint32(len(path.(string))))
 				_ = backupSrv.SendRaw(raw[:])
@@ -153,12 +154,21 @@ func Test_Backup(t *testing.T) {
 			binary.BigEndian.PutUint32(raw[:], 0)
 			_ = backupSrv.SendRaw(raw[:])
 
-			backupSrv.SendPacket([]interface{}{
-				"DLMessageStatusResponse",
-				-13,
-				"Multi status",
-				errs,
-			})
+			if len(errs) > 0 {
+				backupSrv.SendPacket([]interface{}{
+					"DLMessageStatusResponse",
+					-13,
+					"Multi status",
+					errs,
+				})
+			} else {
+				backupSrv.SendPacket([]interface{}{
+					"DLMessageStatusResponse",
+					0,
+					"___EmptyParameterString___",
+					map[string]interface{}{},
+				})
+			}
 		case "DLMessageUploadFiles":
 			progress = resp[2].(float64)
 
