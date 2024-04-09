@@ -4,9 +4,18 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"io"
 
 	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
 )
+
+type Reciever interface {
+	OnProgress(progress float64)
+	OnWriteFile(dpath, path string) (io.WriteCloser, error)
+	OnReadFile(dpath, path string) (io.ReadCloser, error)
+	OnAbort(err error)
+	OnFinish()
+}
 
 var _ Backup = (*backup)(nil)
 
@@ -81,12 +90,13 @@ const CODE_FILE_DATA = 0x0c
 
 const BLOCK_SIZE = 4194304
 
-func (b *backup) Backup() {
+func (b *backup) Backup(recv Reciever) {
 	progress := 0.0
 
 	for {
 		resp, err := b.ReceivePacket()
 		if err != nil {
+			recv.OnAbort(err)
 			break
 		}
 		switch resp[0].(string) {
@@ -201,6 +211,12 @@ func (b *backup) Backup() {
 					break
 				}
 
+				wc, err := recv.OnWriteFile(dname, fname)
+				if err != nil {
+					recv.OnAbort(err)
+				}
+				defer wc.Close()
+
 				// fmt.Printf("DeviceFile:%s\n", dname)
 				fmt.Printf("%.2f %% File:%s\r", progress, fname)
 
@@ -222,10 +238,12 @@ func (b *backup) Backup() {
 						fileLen = fileLen - 1
 						for fileLen != 0 {
 							if fileLen > BLOCK_SIZE {
-								_, _ = b.ReadRaw(BLOCK_SIZE)
+								buf, _ := b.ReadRaw(BLOCK_SIZE)
+								wc.Write(buf)
 								fileLen -= BLOCK_SIZE
 							} else {
-								_, _ = b.ReadRaw(int(fileLen))
+								buf, _ := b.ReadRaw(int(fileLen))
+								wc.Write(buf)
 								fileLen -= fileLen
 							}
 						}
@@ -312,7 +330,7 @@ func (b *backup) Backup() {
 			}
 
 			if checkErr["ErrorCode"].(uint64) != 0 {
-				fmt.Printf("received an error(%d): %s\n", checkErr["ErrorCode"].(uint64), checkErr["ErrorDescription"].(string))
+				recv.OnAbort(fmt.Errorf("received an error(%d): %s", checkErr["ErrorCode"].(uint64), checkErr["ErrorDescription"].(string)))
 			}
 
 			if c, ok := checkErr["Content"]; ok {
@@ -320,12 +338,15 @@ func (b *backup) Backup() {
 			}
 		}
 
+		recv.OnProgress(progress)
+
 		fmt.Printf("%.2f %%\r", progress)
 		if progress >= 100.00 {
 			break
 		}
 	}
-	fmt.Println("Finished")
+
+	recv.OnFinish()
 }
 
 func (b *backup) SendPacket(req []interface{}) (err error) {
