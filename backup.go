@@ -104,18 +104,42 @@ func (b *backup) Backup(recv Reciever) {
 			progress = resp[3].(float64)
 
 			var raw [4]byte
-
-			errString := "No such file or directory"
-
 			errs := map[string]interface{}{}
-			fmt.Println(resp[0].(string))
 
 			for _, path := range resp[1].([]interface{}) {
-				fmt.Println(path)
 				// path
 				binary.BigEndian.PutUint32(raw[:], uint32(len(path.(string))))
 				_ = b.SendRaw(raw[:])
 				_ = b.SendRaw([]byte(path.(string)))
+
+				rc, err := recv.OnReadFile(path.(string), path.(string))
+				if err != nil {
+					errString := "No such file or directory"
+					binary.BigEndian.PutUint32(raw[:], uint32(len(errString)+1))
+					_ = b.SendRaw(append(append(raw[:], byte(CODE_ERROR_LOCAL)), []byte(errString)...))
+					errs[path.(string)] = map[string]interface{}{
+						"DLFileErrorString": errString,
+						"DLFileErrorCode":   -6,
+					}
+				} else {
+					defer rc.Close()
+
+					for {
+						buf := make([]byte, BLOCK_SIZE)
+						n, err := rc.Read(buf)
+						if err != nil {
+							recv.OnAbort(err)
+						}
+
+						binary.BigEndian.PutUint32(raw[:], uint32(n))
+						_ = b.SendRaw(append(raw[:], byte(CODE_FILE_DATA)))
+
+						if n <= 0 {
+							break
+						}
+						_ = b.SendRaw(buf[:n])
+					}
+				}
 
 				/*
 					var record struct {
@@ -147,14 +171,6 @@ func (b *backup) Backup(recv Reciever) {
 				// binary.BigEndian.PutUint32(raw, fileLen)
 				// _ = b.SendRaw(append(raw, byte(CODE_FILE_DATA)))
 				// _ = b.SendRaw(filedata)
-
-				binary.BigEndian.PutUint32(raw[:], uint32(len(errString)+1))
-				_ = b.SendRaw(append(append(raw[:], byte(CODE_ERROR_LOCAL)), []byte(errString)...))
-
-				errs[path.(string)] = map[string]interface{}{
-					"DLFileErrorString": errString,
-					"DLFileErrorCode":   -6,
-				}
 			}
 
 			/*
@@ -216,9 +232,6 @@ func (b *backup) Backup(recv Reciever) {
 					recv.OnAbort(err)
 				}
 				defer wc.Close()
-
-				// fmt.Printf("DeviceFile:%s\n", dname)
-				fmt.Printf("%.2f %% File:%s\r", progress, fname)
 
 				length, _ := b.ReadRaw(4)
 				if len(length) != 4 {
@@ -339,8 +352,6 @@ func (b *backup) Backup(recv Reciever) {
 		}
 
 		recv.OnProgress(progress)
-
-		fmt.Printf("%.2f %%\r", progress)
 		if progress >= 100.00 {
 			break
 		}
