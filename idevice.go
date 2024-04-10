@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"time"
 
@@ -131,9 +132,18 @@ type Screenshot interface {
 	Take() (raw *bytes.Buffer, err error)
 }
 
+type BackupReceiver interface {
+	OnProgress(progress float64)
+	OnWriteFile(dpath, path string) (io.WriteCloser, error)
+	OnReadFile(dpath, path string) (io.ReadCloser, error)
+	OnAbort(err error)
+	OnFinish()
+}
+
 type Backup interface {
 	exchange() (err error)
 	StartBackup(tid, sid string, options map[string]interface{}) (err error)
+	Backup(recv BackupReceiver) (err error)
 	SendPacket(req []interface{}) (err error)
 	ReceivePacket() (resp []interface{}, err error)
 	SendRaw(raw []byte) (err error)

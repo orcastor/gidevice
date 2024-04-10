@@ -4,18 +4,9 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"io"
 
 	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
 )
-
-type Reciever interface {
-	OnProgress(progress float64)
-	OnWriteFile(dpath, path string) (io.WriteCloser, error)
-	OnReadFile(dpath, path string) (io.ReadCloser, error)
-	OnAbort(err error)
-	OnFinish()
-}
 
 var _ Backup = (*backup)(nil)
 
@@ -90,14 +81,14 @@ const CODE_FILE_DATA = 0x0c
 
 const BLOCK_SIZE = 4194304
 
-func (b *backup) Backup(recv Reciever) {
+func (b *backup) Backup(recv BackupReceiver) (err error) {
 	progress := 0.0
 
 	for {
 		resp, err := b.ReceivePacket()
 		if err != nil {
 			recv.OnAbort(err)
-			break
+			return err
 		}
 		switch resp[0].(string) {
 		case "DLMessageDownloadFiles":
@@ -358,6 +349,7 @@ func (b *backup) Backup(recv Reciever) {
 	}
 
 	recv.OnFinish()
+	return
 }
 
 func (b *backup) SendPacket(req []interface{}) (err error) {
