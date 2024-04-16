@@ -3,7 +3,7 @@ package giDevice
 import (
 	"context"
 
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
 )
 
 var _ Usbmux = (*usbmux)(nil)

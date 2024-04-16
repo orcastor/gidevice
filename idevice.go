@@ -8,8 +8,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
-	"github.com/electricbubble/gidevice/pkg/nskeyedarchiver"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/nskeyedarchiver"
 )
 
 type Usbmux interface {

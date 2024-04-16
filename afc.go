@@ -5,11 +5,12 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
 	"io"
 	"path"
 	"strconv"
 	"time"
+
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
 )
 
 var ErrAfcStatNotExist = errors.New("afc stat: no such file or directory")

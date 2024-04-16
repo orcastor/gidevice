@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/electricbubble/gidevice/pkg/ipa"
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
-	"github.com/electricbubble/gidevice/pkg/nskeyedarchiver"
+	"github.com/orcastor/gidevice/pkg/ipa"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/nskeyedarchiver"
 	uuid "github.com/satori/go.uuid"
 	"howett.net/plist"
 )
@@ -802,7 +802,7 @@ func (d *device) XCTest(bundleID string, opts ...XCTestOption) (out <-chan strin
 		return _out, cancelFunc, err
 	}
 
-	// see https://github.com/electricbubble/gidevice/issues/31
+	// see https://github.com/orcastor/gidevice/issues/31
 	// if err = d.instruments.startObserving(pid); err != nil {
 	// 	return _out, cancelFunc, err
 	// }

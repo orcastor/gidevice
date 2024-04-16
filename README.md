@@ -1,15 +1,15 @@
 # Golang-iDevice
 
-[![go doc](https://godoc.org/github.com/electricbubble/gidevice?status.svg)](https://pkg.go.dev/github.com/electricbubble/gidevice?tab=doc#pkg-index)
-[![go report](https://goreportcard.com/badge/github.com/electricbubble/gidevice)](https://goreportcard.com/report/github.com/electricbubble/gidevice)
-[![license](https://img.shields.io/github/license/electricbubble/gidevice)](https://github.com/electricbubble/gidevice/blob/master/LICENSE)
+[![go doc](https://godoc.org/github.com/orcastor/gidevice?status.svg)](https://pkg.go.dev/github.com/orcastor/gidevice?tab=doc#pkg-index)
+[![go report](https://goreportcard.com/badge/github.com/orcastor/gidevice)](https://goreportcard.com/report/github.com/orcastor/gidevice)
+[![license](https://img.shields.io/github/license/orcastor/gidevice)](https://github.com/orcastor/gidevice/blob/master/LICENSE)
 
-> much more easy to use 👉 [electricbubble/gidevice-cli](https://github.com/electricbubble/gidevice-cli)
+> much more easy to use 👉 [orcastor/gidevice-cli](https://github.com/orcastor/gidevice-cli)
 
 ## Installation
 
 ```shell script
-go get github.com/electricbubble/gidevice
+go get github.com/orcastor/gidevice
 ```
 
 #### Devices
@@ -18,7 +18,7 @@ go get github.com/electricbubble/gidevice
 package main
 
 import (
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 )
 
@@ -48,7 +48,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 )
 
@@ -111,7 +111,7 @@ package main
 
 import (
 	"encoding/base64"
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 )
 
@@ -158,7 +158,7 @@ func main() {
 package main
 
 import (
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 	"path/filepath"
 )
@@ -211,7 +211,7 @@ func main() {
 package main
 
 import (
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -271,7 +271,7 @@ func main() {
 package main
 
 import (
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 )
 
@@ -323,7 +323,7 @@ package main
 
 import (
 	"fmt"
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"log"
 	"os"
 	"os/signal"
@@ -375,7 +375,7 @@ package main
 
 import (
 	"fmt"
-	giDevice "github.com/electricbubble/gidevice"
+	giDevice "github.com/orcastor/gidevice"
 	"io"
 	"log"
 	"net"

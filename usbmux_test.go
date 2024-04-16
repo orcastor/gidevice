@@ -1,7 +1,7 @@
 package giDevice
 
 import (
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
 	"testing"
 	"time"
 )

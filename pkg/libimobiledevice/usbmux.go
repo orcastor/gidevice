@@ -15,7 +15,7 @@ import (
 var DefaultDeadlineTimeout = 30 * time.Second
 
 const (
-	BundleID         = "electricbubble.libimobiledevice"
+	BundleID         = "orcastor.libimobiledevice"
 	ProgramName      = "libimobiledevice"
 	ClientVersion    = "libimobiledevice-beta"
 	LibUSBMuxVersion = 3

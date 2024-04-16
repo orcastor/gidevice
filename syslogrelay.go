@@ -3,7 +3,7 @@ package giDevice
 import (
 	"bufio"
 	"fmt"
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
 	"io"
 	"strings"
 )

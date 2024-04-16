@@ -3,7 +3,7 @@ package giDevice
 import (
 	"log"
 
-	"github.com/electricbubble/gidevice/pkg/libimobiledevice"
+	"github.com/orcastor/gidevice/pkg/libimobiledevice"
 )
 
 type pcapdClient struct {

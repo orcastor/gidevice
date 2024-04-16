@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
-	"github.com/electricbubble/gidevice/pkg/nskeyedarchiver"
+	"github.com/orcastor/gidevice/pkg/nskeyedarchiver"
 	"io"
 	"strings"
 	"sync"
@@ -179,7 +179,7 @@ func (c *dtxMessageClient) ReceiveDTXMessage() (result *DTXMessageResult, err er
 
 	var aux, obj []byte
 
-	// see https://github.com/electricbubble/gidevice/issues/28
+	// see https://github.com/orcastor/gidevice/issues/28
 	if r, l := payloadSize+payload.AuxiliaryLength, len(rawPayload); int(r) <= l {
 		aux = rawPayload[payloadSize:r]
 	} else {

@@ -1,4 +1,4 @@
-module github.com/electricbubble/gidevice
+module github.com/orcastor/gidevice
 
 go 1.16
 
