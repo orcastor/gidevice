@@ -295,7 +295,7 @@ func (b *backup) Backup(recv BackupReceiver) (err error) {
 				"DLMessageStatusResponse",
 				0,
 				"___EmptyParameterString___",
-				uint64(8000000000000),
+				recv.GetFreeDiskSpace(),
 			})
 		case "DLMessagePurgeDiskSpace":
 			b.SendPacket([]interface{}{

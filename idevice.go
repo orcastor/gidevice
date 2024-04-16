@@ -136,6 +136,7 @@ type BackupReceiver interface {
 	OnProgress(progress float64)
 	OnWriteFile(dpath, path string) (io.WriteCloser, error)
 	OnReadFile(dpath, path string) (io.ReadCloser, error)
+	GetFreeDiskSpace() uint64
 	OnAbort(err error)
 	OnFinish()
 }

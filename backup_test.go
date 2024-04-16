@@ -51,6 +51,10 @@ func (recv *receiver) OnReadFile(dpath, path string) (io.ReadCloser, error) {
 	return &dummyRW{}, nil
 }
 
+func (recv *receiver) GetFreeDiskSpace() uint64 {
+	return uint64(8000000000000)
+}
+
 func (recv *receiver) OnAbort(err error) {
 }
 
